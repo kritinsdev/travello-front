@@ -2,8 +2,11 @@
   <Navigation />
   <div class="flex flex-col flex-1 md:flex-row">
     <div class="md:w-1/3">
-      <div :class="['max-h-screen', 'p-2', 'overflow-y-scroll', { 'grid grid-cols-2': !selectedPlace, 'grid grid-cols-1': selectedPlace }]">
-        <PlaceCard v-for="item in places" :key="item.id" :place="item" @card-click="zoomToPlace" v-if="!selectedPlace" />
+      <div
+        :class="['max-h-screen', 'p-2', 'overflow-y-scroll', { 'grid grid-cols-2': !selectedPlace, 'grid grid-cols-1': selectedPlace }]">
+        <PlaceCard v-for="(item, index) in places" :key="item.id" :place="item" :rank="index + 1"
+          @card-click="zoomToPlace" v-if="!selectedPlace" />
+          
         <PlaceDescription :place="selectedPlace" @back-clicked="deselectPlace" v-else />
       </div>
     </div>
@@ -76,7 +79,7 @@ export default {
         speed: 1, // make the flying slow
         curve: 1 // change the speed at which it zooms out
       });
-      
+
       this.selectedPlace = place;
     },
     selectPlace(place) {

@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-row p-2 gap-2 cursor-pointer transition-all hover:scale-105" @click="$emit('card-click', place)">
+    <div class="placeCard flex flex-row p-2 gap-2 cursor-pointer transition-all hover:scale-105" @click="$emit('card-click', place)">
         <div class="flex rounded-lg overflow-hidden relative">
             <span
-                class="absolute top-1 left-1 flex items-center justify-center text-sm font-bold text-white rounded-full bg-red-700 text-center w-7 h-7 p-2">1</span>
+                class="rank absolute top-1 left-1 flex items-center justify-center text-md font-bold text-white rounded-full bg-red-700 text-center w-8 h-8 p-2">{{ rank }}</span>
             <div>
                 <img v-if="place.photos && place.photos.length > 0" :src="parseUrl(place.photos[0])" :alt="place.name">
                 <img v-else src="../assets/cafe.webp" alt="">
@@ -27,8 +27,22 @@ export default {
     props: {
         place: {
             type: Object,
-            required: true,
         },
+        rank: Number
     },
 };
 </script>
+
+<style scoped>
+.placeCard:nth-of-type(1) .rank {
+    background-color: #FFD700;
+}
+
+.placeCard:nth-of-type(2) .rank {
+    background-color: #808080;
+}
+
+.placeCard:nth-of-type(3) .rank {
+    background-color: #CD7F32;
+}
+</style>
