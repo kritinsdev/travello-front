@@ -92,6 +92,7 @@ h6 {
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 15px;
+  display: none;
 }
 
 *::-webkit-scrollbar-track {

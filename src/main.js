@@ -12,7 +12,13 @@ import {
     MdFastfoodRound,
     GiHotMeal,
     MdBakerydiningRound,
-    MdLocalgasstationRound
+    MdLocalgasstationRound,
+    FaAngleLeft,
+    OiLocation,
+    GiForkKnifeSpoon,
+    BiStarFill,
+    BiStarHalf,
+    BiStar
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -23,7 +29,13 @@ addIcons(
     MdFastfoodRound,
     GiHotMeal,
     MdBakerydiningRound,
-    MdLocalgasstationRound
+    MdLocalgasstationRound,
+    FaAngleLeft,
+    OiLocation,
+    GiForkKnifeSpoon,
+    BiStarFill,
+    BiStarHalf,
+    BiStar
     );
 
 const app = createApp(App);

@@ -2,18 +2,18 @@
   <Navigation />
   <div class="flex flex-col flex-1 md:flex-row">
     <div class="md:w-1/3">
-      <div class="max-h-screen grid grid-cols-2 p-2 overflow-y-scroll">
-        <PlaceCard v-for="item in places" :key="item.id" :place="item" @card-click="zoomToPlace" />
-
-        <PlaceDescription />
+      <div :class="['max-h-screen', 'p-2', 'overflow-y-scroll', { 'grid grid-cols-2': !selectedPlace, 'grid grid-cols-1': selectedPlace }]">
+        <PlaceCard v-for="item in places" :key="item.id" :place="item" @card-click="zoomToPlace" v-if="!selectedPlace" />
+        <PlaceDescription :place="selectedPlace" @back-clicked="deselectPlace" v-else />
       </div>
     </div>
     <div class="flex-auto h-full">
-      <MapboxMap :accessToken="accessToken" :mapStyle.sync="mapStyle" :zoom.sync="zoom" :center.sync="center">
+      <MapboxMap ref="mapbox" :accessToken="accessToken" :mapStyle.sync="mapStyle" :zoom.sync="zoom"
+        :center.sync="center">
         <MapboxNavigationControl position="top-right" />
         <MapboxGeolocateControl />
         <MapboxMarker v-for="place in places" :key="place.id" :lngLat="[place.lng, place.lat]">
-          <div class="markerWrap">
+          <div class="markerWrap" @click="selectPlace(place)">
             <div class='marker'></div>
             <div class="markerIcon">
               <v-icon :name="getIconName(place.type[0])" fill="white" scale="1" />
@@ -29,6 +29,7 @@
 import axios from 'axios';
 import Navigation from './components/Navigation.vue';
 import PlaceCard from './components/PlaceCard.vue';
+import PlaceDescription from './components/PlaceDescription.vue';
 import { MapboxMap, MapboxMarker, MapboxNavigationControl, MapboxGeolocateControl } from '@studiometa/vue-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -36,6 +37,7 @@ export default {
   components: {
     Navigation,
     PlaceCard,
+    PlaceDescription,
     MapboxMap,
     MapboxMarker,
     MapboxNavigationControl,
@@ -68,12 +70,23 @@ export default {
         });
     },
     zoomToPlace(place) {
-      this.center = [place.lng, place.lat];
-      this.zoom = 20;
+      this.$refs.mapbox.map.flyTo({
+        center: [place.lng, place.lat],
+        zoom: 20,
+        speed: 1, // make the flying slow
+        curve: 1 // change the speed at which it zooms out
+      });
+      
+      this.selectedPlace = place;
+    },
+    selectPlace(place) {
+      this.selectedPlace = place;
 
-      setTimeout(() => {
-        this.openModal(place);
-      }, 500);
+      this.zoomToPlace(place);
+    },
+    deselectPlace() {
+      this.selectedPlace = null;
+      this.zoom = 15;
     },
     getIconName(type) {
       if (type === 'Restaurant') {
@@ -89,12 +102,12 @@ export default {
       } else if (type === 'Pizzeria') {
         return 'fa-pizza-slice';
       } else if (type === 'Bakery') {
-        return 'md-bakerydining-round'; 
+        return 'md-bakerydining-round';
       } else if (type === 'Food Truck') {
         return 'gi-food-truck';
       } else if (type === 'Gas Station') {
         return 'md-localgasstation-round';
-      }  
+      }
       return 'md-restaurant-round';
     },
   },
