@@ -1,9 +1,11 @@
 <template>
   <Navigation />
   <div class="flex flex-col flex-1 md:flex-row">
-    <div class="md:w-2/5">
+    <div class="md:w-1/3">
       <div class="max-h-screen grid grid-cols-2 p-2 overflow-y-scroll">
         <PlaceCard v-for="item in places" :key="item.id" :place="item" @card-click="zoomToPlace" />
+
+        <PlaceDescription />
       </div>
     </div>
     <div class="flex-auto h-full">
@@ -11,36 +13,22 @@
         <MapboxNavigationControl position="top-right" />
         <MapboxGeolocateControl />
         <MapboxMarker v-for="place in places" :key="place.id" :lngLat="[place.lng, place.lat]">
-          <div class="markerWrap" @click="openModal(place)">
+          <div class="markerWrap">
             <div class='marker'></div>
             <div class="markerIcon">
-              {{ place.type[0] }}
+              <v-icon :name="getIconName(place.type[0])" fill="white" scale="1" />
             </div>
           </div>
         </MapboxMarker>
       </MapboxMap>
     </div>
   </div>
-  <Modal :show-modal="showModal" @close="closeModal">
-    <div>
-      <div class="font-bold text-3xl">{{ selectedPlace.name }}</div>
-      <p>{{ selectedPlace.address }}</p>
-      <p>Phone number : {{ selectedPlace.phone_number }}</p>
-      <p>Website : {{ selectedPlace.website }}</p>
-      <p>Rating : {{ selectedPlace.rating }}</p>
-      <p>Total ratings : {{ selectedPlace.user_ratings_total }}</p>
-      <p>Delivery : {{ selectedPlace.delivery }}</p>
-      <p>Dine In : {{ selectedPlace.dine_in }}</p>
-      <p>Takeout : {{ selectedPlace.takeout }}</p>
-    </div>
-  </Modal>
 </template>
 
 <script>
 import axios from 'axios';
 import Navigation from './components/Navigation.vue';
 import PlaceCard from './components/PlaceCard.vue';
-import Modal from './components/Modal.vue';
 import { MapboxMap, MapboxMarker, MapboxNavigationControl, MapboxGeolocateControl } from '@studiometa/vue-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -48,7 +36,6 @@ export default {
   components: {
     Navigation,
     PlaceCard,
-    Modal,
     MapboxMap,
     MapboxMarker,
     MapboxNavigationControl,
@@ -59,8 +46,8 @@ export default {
       places: [],
       showModal: false,
       selectedPlace: null,
-      accessToken: 'pk.eyJ1Ijoia3JpdGluc2RldiIsImEiOiJjbGkxbDgwazUwM24zM3VwbWJtdWJxYXZkIn0.DJfikKOno3KOITyHck6CrA',
-      mapStyle: 'mapbox://styles/kritinsdev/clifogj6j000501qv09h3gwvy',
+      accessToken: `${import.meta.env.VITE_MAPBOX_API_TOKEN}`,
+      mapStyle: `${import.meta.env.VITE_MABOX_MAP_STYLE}`,
       center: [24.604618505142696, 56.81647910237139],
       zoom: 15,
     };
@@ -88,13 +75,27 @@ export default {
         this.openModal(place);
       }, 500);
     },
-    openModal(place) {
-      this.selectedPlace = place;
-      this.showModal = true;
-    },
-    closeModal() {
-      this.selectedPlace = null;
-      this.showModal = false;
+    getIconName(type) {
+      if (type === 'Restaurant') {
+        return 'md-restaurant-round';
+      } else if (type === 'Cafe') {
+        return 'md-localcafe-outlined';
+      } else if (type === 'Bar') {
+        return 'md-sportsbar-outlined';
+      } else if (type === 'Fast Food') {
+        return 'md-fastfood-round';
+      } else if (type === 'Bistro') {
+        return 'gi-hot-meal';
+      } else if (type === 'Pizzeria') {
+        return 'fa-pizza-slice';
+      } else if (type === 'Bakery') {
+        return 'md-bakerydining-round'; 
+      } else if (type === 'Food Truck') {
+        return 'gi-food-truck';
+      } else if (type === 'Gas Station') {
+        return 'md-localgasstation-round';
+      }  
+      return 'md-restaurant-round';
     },
   },
 };

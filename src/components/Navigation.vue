@@ -4,7 +4,6 @@
             <div class="flex gap-2">
                 <div class="text-xl font-bold">
                     EAT.ER
-                    <v-icon fill="white" name="gi-beer-stein" scale="2" />
                 </div>
             </div>
             <div class="center">

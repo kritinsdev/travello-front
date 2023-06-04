@@ -118,8 +118,8 @@ h6 {
   transform-origin: 50% 50%;
   border-radius: 50% 50% 50% 0;
   padding: 0 3px 3px 0;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   background: var(--color-primary);
   position: absolute;
   left: 50%;
@@ -130,20 +130,11 @@ h6 {
   box-shadow: -1px 1px 4px rgba(0, 0, 0, .5);
 }
 
-
-/* .markerIcon {
-  position: relative;
-  z-index: 199;
-  top:-10px;
-  left: -2px;
-  color:white;
-} */
-
 .markerIcon {
   position: relative;
   z-index: 199;
-  top:-10px;
-  left: -2px;
+  top:-6px;
+  left: 1px;
 }
 
 .markerIcon img{

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row p-2 gap-2 cursor-pointer" @click="$emit('card-click', place)">
+    <div class="flex flex-row p-2 gap-2 cursor-pointer transition-all hover:scale-105" @click="$emit('card-click', place)">
         <div class="flex rounded-lg overflow-hidden relative">
             <span
                 class="absolute top-1 left-1 flex items-center justify-center text-sm font-bold text-white rounded-full bg-red-700 text-center w-7 h-7 p-2">1</span>
