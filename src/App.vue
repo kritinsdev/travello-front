@@ -6,13 +6,17 @@
         :class="['max-h-screen', 'p-2', 'overflow-y-scroll', { 'grid grid-cols-2': !selectedPlace, 'grid grid-cols-1': selectedPlace }]">
         <PlaceCard v-for="(item, index) in places" :key="item.id" :place="item" :rank="index + 1"
           @card-click="zoomToPlace" v-if="!selectedPlace" />
-          
+
         <PlaceDescription :place="selectedPlace" @back-clicked="deselectPlace" v-else />
       </div>
     </div>
     <div class="flex-auto h-full">
-      <MapboxMap ref="mapbox" :accessToken="accessToken" :mapStyle.sync="mapStyle" :zoom.sync="zoom"
-        :center.sync="center">
+      <MapboxMap ref="mapbox" 
+      :accessToken="accessToken" 
+      :mapStyle.sync="mapStyle" 
+      :zoom.sync="zoom" 
+      :center.sync="center" 
+      >
         <MapboxNavigationControl position="top-right" />
         <MapboxGeolocateControl />
         <MapboxMarker v-for="place in places" :key="place.id" :lngLat="[place.lng, place.lat]">
@@ -49,12 +53,13 @@ export default {
   data() {
     return {
       places: [],
-      showModal: false,
       selectedPlace: null,
       accessToken: `${import.meta.env.VITE_MAPBOX_API_TOKEN}`,
       mapStyle: `${import.meta.env.VITE_MABOX_MAP_STYLE}`,
-      center: [24.604618505142696, 56.81647910237139],
+      center: [24.601618515555996, 56.81647910237139],
       zoom: 15,
+      pitch: 60, // add later
+      bearing:310, // add later
     };
   },
   mounted() {
@@ -65,7 +70,6 @@ export default {
       axios
         .get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/places`)
         .then(response => {
-          console.log(response.data);
           this.places = response.data.data;
         })
         .catch(error => {
@@ -75,9 +79,8 @@ export default {
     zoomToPlace(place) {
       this.$refs.mapbox.map.flyTo({
         center: [place.lng, place.lat],
-        zoom: 20,
-        speed: 1, // make the flying slow
-        curve: 1 // change the speed at which it zooms out
+        zoom: 19,
+        curve: 2
       });
 
       this.selectedPlace = place;
@@ -89,8 +92,8 @@ export default {
     },
     deselectPlace() {
       this.selectedPlace = null;
-      this.zoom = 15;
     },
+
     getIconName(type) {
       if (type === 'Restaurant') {
         return 'md-restaurant-round';
